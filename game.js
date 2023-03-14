@@ -14,23 +14,30 @@ let availableQuesions = [];
 let questions = [];
 
 fetch(
-    'https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple'
+    // 'https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple&encode=base64'
+    'https://the-trivia-api.com/api/questions?limit=20&difficulty=easy'
 )
-    .then((res) => {
+    .then((res ) => {
         return res.json();
     })
     .then((loadedQuestions) => {
-        questions = loadedQuestions.results.map((loadedQuestion) => {
+        // questions = loadedQuestions.results.map((loadedQuestion) => {
+            questions = loadedQuestions.map((loadedQuestion) => {
+
             const formattedQuestion = {
+                // question: atob(loadedQuestion.question),
                 question: loadedQuestion.question,
             };
-
-            const answerChoices = [...loadedQuestion.incorrect_answers];
+            let test = [];
+            // loadedQuestion.incorrect_answers.forEach(x => {test.push(atob(x))})
+            // const answerChoices = [...test];
+            const answerChoices = [...loadedQuestion.incorrectAnswers];
             formattedQuestion.answer = Math.floor(Math.random() * 4) + 1;
             answerChoices.splice(
                 formattedQuestion.answer - 1,
                 0,
-                loadedQuestion.correct_answer
+                // atob(loadedQuestion.correct_answer)
+                loadedQuestion.correctAnswer
             );
 
             answerChoices.forEach((choice, index) => {
@@ -48,7 +55,7 @@ fetch(
 
 //CONSTANTS
 const CORRECT_BONUS = 10;
-const MAX_QUESTIONS = 10;
+const MAX_QUESTIONS = 20;
 
 startGame = () => {
     questionCounter = 0;
